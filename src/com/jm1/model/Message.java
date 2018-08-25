@@ -1,7 +1,12 @@
 package com.jm1.model;
 
+import java.util.UUID;
+
 //留言
-public class MessageBean {
+public class Message {
+	
+	//唯一编号
+	private UUID id;
 	
 	//昵称
 	private String nick;
@@ -10,6 +15,12 @@ public class MessageBean {
 	//正文
 	private String content;
 	
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
+	}
 	
 	public String getNick() {
 		return nick;
