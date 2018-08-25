@@ -8,8 +8,8 @@ import java.sql.Statement;
 
 public class JDBCUtil {
 	public static Connection getConnection() throws SQLException, ClassNotFoundException{
-		Class.forName("com.mysql.jdbc.Driver");
-		String url = "jdbc:mysql://localhost:3306/jdbc";
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		String url = "jdbc:mysql://localhost:3306/jm1?useSSL=false&useUnicode=true&characterEncoding=UTF-8";
 		String username = "root";
 		String password = "123456";
 		Connection connection = DriverManager.getConnection(url, username, password);

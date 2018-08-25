@@ -12,12 +12,17 @@ import java.util.List;
 public class PagedList<T> {
 	
 	
-	private List<T> items;
+	public List<T> items;
 	
-	public PagedList(List<T> items, int total) {
+	public PagedList(List<T> items, int total, int pageIndex, int pageSize) {
 		this.items = items;
-		recordTotal = total;
+		this.recordTotal = total;
+		this.pageTotal = total / pageSize + (total % pageSize > 0 ? 1 : 0);
+		this.pageIndex = pageIndex;
+		this.pageSize = pageSize;
 	}
+	
+	
 	
 	public int recordTotal;
 	

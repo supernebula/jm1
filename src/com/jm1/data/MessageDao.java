@@ -25,9 +25,9 @@ public class MessageDao {
 		try {
 			conn =  JDBCUtil.getConnection();
 			statement = conn.createStatement();
-			String sql = String.format("INSERT INTO message(id, nick, email, content) VALUES(%s, %s, %s, %s)", item.getId(), item.getNick(), item.getEmail(), item.getContent());
-			boolean flag = statement.execute(sql);
-			return flag;
+			String sql = String.format("INSERT INTO message(id, nick, email, content) VALUES('%s', '%s', '%s', '%s')", item.getId(), item.getNick(), item.getEmail(), item.getContent());
+			int flag = statement.executeUpdate(sql);
+			return flag > 0;
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -39,7 +39,7 @@ public class MessageDao {
 		return false;
 	}
 	
-	public boolean delete(Message item) {
+	public boolean delete(String id) {
 		Connection conn = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -47,7 +47,7 @@ public class MessageDao {
 		try {
 			conn =  JDBCUtil.getConnection();
 			statement = conn.createStatement();
-			String sql = String.format("DELETE FROM message WHERE id = %s", item.getId());
+			String sql = String.format("DELETE FROM message WHERE id = '%s'", id);
 			int num = statement.executeUpdate(sql);
 			return num > 0;
 			
@@ -69,7 +69,7 @@ public class MessageDao {
 		try {
 			conn =  JDBCUtil.getConnection();
 			statement = conn.createStatement();
-			String sql = String.format("UPDATE message SET name = %s, nick = %s, email = %s, content = %s WHERE id = %s", item.getNick(), item.getEmail(), item.getContent(), item.getId());
+			String sql = String.format("UPDATE message SET nick = '%s', email = '%s', content = '%s' WHERE id = '%s'", item.getNick(), item.getEmail(), item.getContent(), item.getId());
 			int num = statement.executeUpdate(sql);
 			return num > 0;
 			
@@ -83,7 +83,7 @@ public class MessageDao {
 		return false;
 	}
 	
-	public Message find(Message item) {
+	public Message find(String messageId) {
 		Connection conn = null;
 		Statement statement = null;
 		ResultSet rs = null;
@@ -91,7 +91,7 @@ public class MessageDao {
 		try {
 			conn =  JDBCUtil.getConnection();
 			statement = conn.createStatement();
-			String sql = String.format("SELECT * FROM message WHERE id = %s", item.getId());
+			String sql = String.format("SELECT * FROM message WHERE id = '%s'", messageId);
 			rs = statement.executeQuery(sql);
 			while (rs.next()) {
 				Message msg = new Message();
@@ -153,7 +153,7 @@ public class MessageDao {
 		try {
 			conn =  JDBCUtil.getConnection();
 			statement = conn.createStatement();
-			String sql = String.format("SELECT * FROM message WHERE email LIKE '%%s%'", email);
+			String sql = "SELECT * FROM message WHERE email LIKE '%" + email + "%'";
 			rs = statement.executeQuery(sql);
 			
 			
@@ -197,7 +197,12 @@ public class MessageDao {
 		try {
 			conn =  JDBCUtil.getConnection();
 			statement = conn.createStatement();
-			String sql = String.format("SELECT * FROM message  LIMIT %d, %d email LIKE '%%s%'", email);
+			String sql;
+			if(email == null)
+				sql = String.format("SELECT * FROM message  LIMIT %d, %d", offset, size);
+			else
+				sql = String.format("SELECT * FROM message  LIMIT %d, %d WHERE email LIKE '%" + email + "%'", offset, size);
+			
 			rs = statement.executeQuery(sql);
 			while (rs.next()) {
 				Message msg = new Message();
@@ -209,12 +214,18 @@ public class MessageDao {
 				list.add(msg);
 			}
 			
-			totalRs = statement.executeQuery("SELECT COUNT(id) as total FROM message WHERE email LIKE '%%s%'");
+			String countSql;
+			if(email == null)
+				countSql = "SELECT COUNT(id) as total FROM message";
+			else
+				countSql = "SELECT COUNT(id) as total FROM message WHERE email LIKE '%" + email + "%'";
 			
+			totalRs = statement.executeQuery(countSql);
+			totalRs.next();
 			int total = totalRs.getInt("total");
 			
 
-			PagedList<Message> pagedList = new PagedList<Message>(list, total);
+			PagedList<Message> pagedList = new PagedList<Message>(list, total, pageIndex, pageSize);
 			return pagedList;
 		} catch (Exception e) {
 			// TODO: handle exception
