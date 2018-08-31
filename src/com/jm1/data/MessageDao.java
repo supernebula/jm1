@@ -3,7 +3,11 @@ package com.jm1.data;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +29,9 @@ public class MessageDao {
 		try {
 			conn =  JDBCUtil.getConnection();
 			statement = conn.createStatement();
-			String sql = String.format("INSERT INTO message(id, nick, email, content) VALUES('%s', '%s', '%s', '%s')", item.getId(), item.getNick(), item.getEmail(), item.getContent());
+			
+			Timestamp createDate = Timestamp.valueOf(LocalDateTime.now());
+			String sql = String.format("INSERT INTO message(id, nick, email, content, createTime) VALUES('%s', '%s', '%s', '%s', '%s')", item.getId(), item.getNick(), item.getEmail(), item.getContent(), createDate);
 			int flag = statement.executeUpdate(sql);
 			return flag > 0;
 			
@@ -100,6 +106,7 @@ public class MessageDao {
 				msg.setNick(rs.getString("nick"));
 				msg.setEmail(rs.getString("email"));
 				msg.setContent(rs.getString("content"));
+				msg.setCreateTime(rs.getDate("createTime"));
 				return msg;
 			}
 		} catch (Exception e) {
@@ -131,6 +138,7 @@ public class MessageDao {
 				msg.setNick(rs.getString("nick"));
 				msg.setEmail(rs.getString("email"));
 				msg.setContent(rs.getString("content"));
+				msg.setCreateTime(rs.getDate("createTime"));
 				list.add(msg);
 			}
 			return list;
@@ -164,6 +172,7 @@ public class MessageDao {
 				msg.setNick(rs.getString("nick"));
 				msg.setEmail(rs.getString("email"));
 				msg.setContent(rs.getString("content"));
+				msg.setCreateTime(rs.getDate("createTime"));
 				list.add(msg);
 			}
 			return list;
@@ -211,6 +220,7 @@ public class MessageDao {
 				msg.setNick(rs.getString("nick"));
 				msg.setEmail(rs.getString("email"));
 				msg.setContent(rs.getString("content"));
+				msg.setCreateTime(rs.getDate("createTime"));
 				list.add(msg);
 			}
 			

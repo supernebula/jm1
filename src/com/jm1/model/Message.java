@@ -1,5 +1,6 @@
 package com.jm1.model;
 
+import java.util.Date;
 import java.util.UUID;
 
 //留言
@@ -15,6 +16,10 @@ public class Message {
 	//正文
 	private String content;
 	
+	//创建时间
+	private Date createTime;
+	
+
 	public UUID getId() {
 		return id;
 	}
@@ -39,6 +44,13 @@ public class Message {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public Date getCreateTime() {
+		return this.createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 	
 

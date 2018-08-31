@@ -28,9 +28,9 @@ class MessageDaoTest {
 		MessageDao messageDao = new MessageDao();
 		Message item = new Message();
 		item.setId(UUID.randomUUID());
-		item.setNick("王五22");
-		item.setEmail("wangwu22@sina.com");
-		item.setContent("今天人挺多的");
+		item.setNick("777王五22");
+		item.setEmail("777@sina.com");
+		item.setContent("777");
 	    boolean isSuccess = messageDao.insert(item);
 		assertTrue(isSuccess);
 	}
@@ -76,8 +76,8 @@ class MessageDaoTest {
 		Message item = messageDao.find("b9845730-626b-4f13-9e52-42214698deb7");
 		if(item != null)
 		{
-		    System.out.println(String.format("id: %s,  nick: %s,  email: %s, content: %s", 
-		    		item.getId(), item.getNick(), item.getEmail(), item.getContent()));
+		    System.out.println(String.format("id: %s,  nick: %s,  email: %s, content: %s, createTime: %tc%n", 
+		    		item.getId(), item.getNick(), item.getEmail(), item.getContent(), item.getCreateTime()));
 		}
 		assertNotNull(item, "没有匹配的记录");
 	}
@@ -104,8 +104,8 @@ class MessageDaoTest {
 		if(list != null)
 		{
 			for (Message item : list) {
-			    System.out.println(String.format("id: %s,  nick: %s,  email: %s, content: %s", 
-			    		item.getId(), item.getNick(), item.getEmail(), item.getContent()));
+			    System.out.println(String.format("id: %s,  nick: %s,  email: %s, content: %s, createTime: %tc%n", 
+			    		item.getId(), item.getNick(), item.getEmail(), item.getContent(), item.getCreateTime()));
 			}
 
 		}
@@ -123,8 +123,8 @@ class MessageDaoTest {
 		if(pagedlist.items != null)
 		{
 			for (Message item : pagedlist.items) {
-			    System.out.println(String.format("id: %s,  nick: %s,  email: %s, content: %s", 
-			    		item.getId(), item.getNick(), item.getEmail(), item.getContent()));
+			    System.out.println(String.format("id: %s,  nick: %s,  email: %s, content: %s, createTime: %tc%n", 
+			    		item.getId(), item.getNick(), item.getEmail(), item.getContent(), item.getCreateTime()));
 			}
 
 		}

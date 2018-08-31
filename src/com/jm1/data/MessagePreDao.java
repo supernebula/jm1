@@ -4,12 +4,16 @@
 package com.jm1.data;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.jm1.common.PagedList;
 import com.jm1.model.Message;
@@ -27,12 +31,13 @@ public class MessagePreDao {
 		
 		try {
 			conn =  JDBCUtil.getConnection();
-			String sql = "INSERT INTO message(id, nick, email, content) VALUES(?, ?, ?, ?)";
+			String sql = "INSERT INTO message(id, nick, email, content, createTime) VALUES(?, ?, ?, ?, ?)";
 			preStatement = conn.prepareStatement(sql);
 			preStatement.setString(1, item.getId().toString());
 			preStatement.setString(2, item.getNick());
 			preStatement.setString(3, item.getEmail());
 			preStatement.setString(4, item.getContent());
+			preStatement.setTimestamp(5, new Timestamp((new java.util.Date()).getTime()), Calendar.getInstance());
 			
 			int flag = preStatement.executeUpdate();
 			return flag > 0;
@@ -116,6 +121,7 @@ public class MessagePreDao {
 				msg.setNick(rs.getString("nick"));
 				msg.setEmail(rs.getString("email"));
 				msg.setContent(rs.getString("content"));
+				msg.setCreateTime(rs.getDate("createTime"));
 				return msg;
 			}
 		} catch (Exception e) {
@@ -146,6 +152,7 @@ public class MessagePreDao {
 				msg.setNick(rs.getString("nick"));
 				msg.setEmail(rs.getString("email"));
 				msg.setContent(rs.getString("content"));
+				msg.setCreateTime(rs.getDate("createTime"));
 				list.add(msg);
 			}
 			return list;
@@ -180,6 +187,7 @@ public class MessagePreDao {
 				msg.setNick(rs.getString("nick"));
 				msg.setEmail(rs.getString("email"));
 				msg.setContent(rs.getString("content"));
+				msg.setCreateTime(rs.getDate("createTime"));
 				list.add(msg);
 			}
 			return list;
@@ -217,17 +225,17 @@ public class MessagePreDao {
 			String sql;
 			if(email == null)
 			{
-				sql = "SELECT * FROM message  LIMIT ?, ?";
+				sql = "SELECT * FROM message ORDER BY createTime DESC LIMIT ?, ? ";
 				preStatement = conn.prepareStatement(sql);
 				preStatement.setInt(1, offset);
-				preStatement.setInt(2, 2);
+				preStatement.setInt(2, size);
 			}
 			else
 			{
-				sql = "SELECT * FROM message  LIMIT ?, ? WHERE email LIKE '%?%'";
+				sql = "SELECT * FROM message ORDER BY createTime DESC  LIMIT ?, ? WHERE email LIKE '%?%'";
 				preStatement = conn.prepareStatement(sql);
 				preStatement.setInt(1, offset);
-				preStatement.setInt(2, 2);
+				preStatement.setInt(2, size);
 				preStatement.setString(3, email);
 			}
 			rs = preStatement.executeQuery();
@@ -238,6 +246,7 @@ public class MessagePreDao {
 				msg.setNick(rs.getString("nick"));
 				msg.setEmail(rs.getString("email"));
 				msg.setContent(rs.getString("content"));
+				msg.setCreateTime(rs.getDate("createTime"));
 				list.add(msg);
 			}
 			
